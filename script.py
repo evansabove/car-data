@@ -1,58 +1,24 @@
-import obd
+import obd_connector
 import time
-import csv
 import uuid
 import datetime
+import csv_writer
+import obd
 
 live_data = {}
 config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
-
-def connect():
-    connection_attempt = 1
-
-    while True:
-        if connection_attempt > config['connection_attempt_limit']:
-            return None
-
-        print("Connection attempt " + str(connection_attempt) + "...")
-
-        obd.logger.setLevel(obd.logging.DEBUG)
-        conn = obd.Async(config['communication_port'] or None)
-        obd.logger.setLevel(obd.logging.FATAL)
-
-        if conn.is_connected():
-            print("Connection made using protocol ", conn.protocol_name())
-            print("Supported commands: ", ', '.join([x.name for x in conn.supported_commands]))
-            
-            for i in conn.supported_commands:
-                live_data[i] = None
-            
-            return conn
-
-        time.sleep(1)
-        connection_attempt = connection_attempt + 1
+data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL]
 
 def process_response(response):
     if not response.is_null():
         live_data[response.command.name] = response.value.magnitude
 
 def configure_watches(connection):
-    for i in connection.supported_commands:
+    for i in data_points:
         connection.watch(i, callback=process_response)
 
-def initialize_csv(drive_id):
-    with open(str(drive_id) + '.csv', 'a') as file:
-        writer = csv.DictWriter(file, live_data.keys())
-        writer.writeheader()
-
-def write_to_csv(drive_id):
-    # this is not appending. header is missing.livi
-    with open(str(drive_id) + '.csv', 'a') as file:
-        writer = csv.DictWriter(file, live_data.keys())
-        writer.writerow(live_data)
-
 def main():
-    connection = connect()
+    connection = obd_connector.connect(config)
 
     if connection is None:
         print("Connection could not be made. Not trying any more.")
@@ -60,7 +26,12 @@ def main():
 
     drive_id = uuid.uuid4()
 
-    initialize_csv(drive_id)
+    for command in data_points:
+        live_data[command.name] = None
+
+    live_data['TIMESTAMP'] = None
+
+    csv_writer.initialize_csv(drive_id, live_data.keys())
     configure_watches(connection)
 
     connection.start()
@@ -69,10 +40,9 @@ def main():
         with connection.paused() as was_running:
             live_data["TIMESTAMP"] = str(datetime.datetime.now())
 
-            print(live_data)
-            write_to_csv(drive_id)
+            csv_writer.write_to_csv(drive_id, live_data)
             
-            time.sleep(2)
+            time.sleep(1)
 
             if was_running:
                 connection.start()
@@ -87,3 +57,6 @@ if __name__ == "__main__":
     # Analytics off that data store?
 
     # Get to the bottom of the connection problem
+
+    # Faster data rate, more definition
+    # Round numbers before storing.
