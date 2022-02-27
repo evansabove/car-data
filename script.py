@@ -1,4 +1,5 @@
 import obd_connector
+import mock_obd_connector
 import time
 import uuid
 import datetime
@@ -8,17 +9,21 @@ import obd
 live_data = {}
 config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
 data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL]
+use_mock = True
 
 def process_response(response):
     if not response.is_null():
-        live_data[response.command.name] = response.value.magnitude
+        live_data[response.command.name] = round(response.value.magnitude, 2)
 
 def configure_watches(connection):
     for i in data_points:
         connection.watch(i, callback=process_response)
 
+def get_connector():
+    return mock_obd_connector.connect if use_mock else obd_connector.connect
+
 def main():
-    connection = obd_connector.connect(config)
+    connection = get_connector()(config)
 
     if connection is None:
         print("Connection could not be made. Not trying any more.")
