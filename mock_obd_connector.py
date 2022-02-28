@@ -7,22 +7,23 @@ def connect(config):
 
 class MockConnection:
     watches = {}
+    running = True
 
     def start(self):
         thread = Thread(target = self.generate_data)
         thread.start()
 
-        pass
-
     def watch(self, property, callback):
         self.watches[property.name] = callback
-        pass
 
     def paused(self):
         return MockThing()
 
+    def stop(self):
+        self.running = False
+
     def generate_data(self):
-        while True:
+        while self.running:
             for property, callback in self.watches.items():
                 callback(MockResponse(property, random()))
             
@@ -58,5 +59,3 @@ class MockResponse:
 
     def is_null(self):
         return False
-
-    

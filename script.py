@@ -7,61 +7,62 @@ import csv_writer
 import obd
 
 live_data = {}
-config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
-data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL, obd.commands.ENGINE_LOAD]
-use_mock = True
 
-def process_response(response):
-    if not response.is_null():
-        live_data[response.command.name] = round(response.value.magnitude, 2)
+class ObdConnector:
+    config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
+    data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL, obd.commands.ENGINE_LOAD]
+    use_mock = True
+    running = True
 
-def configure_watches(connection):
-    for i in data_points:
-        connection.watch(i, callback=process_response)
+    def process_response(self, response):
+        if not response.is_null():
+            live_data[response.command.name] = round(response.value.magnitude, 2)
 
-def get_connector():
-    return mock_obd_connector.connect if use_mock else obd_connector.connect
+    def configure_watches(self):
+        for i in self.data_points:
+            self.connection.watch(i, callback=self.process_response)
 
-def main():
-    connection = get_connector()(config)
+    def get_connector(self):
+        return mock_obd_connector.connect if self.use_mock else obd_connector.connect
 
-    if connection is None:
-        print("Connection could not be made. Not trying any more.")
-        return
+    def main(self):
+        self.connection = self.get_connector()(self.config)
 
-    drive_id = uuid.uuid4()
+        if self.connection is None:
+            print("Connection could not be made. Not trying any more.")
+            return
 
-    for command in data_points:
-        live_data[command.name] = None
+        drive_id = uuid.uuid4()
 
-    live_data['TIMESTAMP'] = None
+        for command in self.data_points:
+            live_data[command.name] = None
 
-    csv_writer.initialize_csv(drive_id, live_data.keys())
-    configure_watches(connection)
+        live_data['TIMESTAMP'] = None
 
-    connection.start()
+        csv_writer.initialize_csv(drive_id, live_data.keys())
+        self.configure_watches()
 
-    while True:
-        with connection.paused() as was_running:
-            live_data["TIMESTAMP"] = str(datetime.datetime.now())
+        self.connection.start()
 
-            csv_writer.write_to_csv(drive_id, live_data)
-            
-            time.sleep(1)
+        while self.running:
+            with self.connection.paused() as was_running:
+                live_data["TIMESTAMP"] = str(datetime.datetime.now())
 
-            if was_running:
-                connection.start()
+                csv_writer.write_to_csv(drive_id, live_data)
+                
+                time.sleep(1)
+
+                if was_running:
+                    self.connection.start()
+
+    def stop(self):
+        self.connection.stop()
+        self.running = False
 
 if __name__ == "__main__":
-    main()
+    app = ObdConnector()
 
-
-# Next steps:
-    # Then upload to blob storage when network availabile?
-    # Azure function on that blob trigger to load into a data store?
-    # Analytics off that data store?
-
-    # Get to the bottom of the connection problem
-
-    # Faster data rate, more definition
-    # Round numbers before storing.
+    try:
+        app.main()
+    except KeyboardInterrupt:
+        app.stop()
