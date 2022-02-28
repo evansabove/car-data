@@ -17,7 +17,10 @@ class UserInterface:
     def setup_ui(self):
         self.add_widget(obd.commands.SPEED.name, 'Speed', 0, 0)
         self.add_widget(obd.commands.RPM.name, 'RPM', 0, 1)
-        self.add_widget(obd.commands.COOLANT_TEMP.name, 'Coolant Temp', 1, 0)
+        self.add_widget(obd.commands.COOLANT_TEMP.name, 'Coolant Temp', 0, 2)
+        self.add_widget(obd.commands.INTAKE_TEMP.name, 'Intake Temp', 1, 0)
+        self.add_widget(obd.commands.FUEL_LEVEL.name, 'Fuel Level', 1, 1)
+        self.add_widget(obd.commands.ENGINE_LOAD.name, 'Engine Load', 1, 2)
 
         col_count, row_count = self.window.grid_size()
 
