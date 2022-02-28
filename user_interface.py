@@ -33,10 +33,13 @@ class UserInterface:
         self.window.configure(background='#002B36')
 
     def add_widget(self, data_key, data_name, row, col):
-        frame = tk.Frame()
+        frame = tk.Frame(bg='#002B36')
+
+        thing = tk.Label(frame, text=data_name, bg='#002B36', fg='#FFF', font=("Arial", 20))
+        thing.pack()
 
         var = tk.StringVar()
-        label = tk.Label(frame, textvariable=var, bg='#002B36', fg='#FFF')
+        label = tk.Label(frame, textvariable=var, bg='#002B36', fg='#746A31', font=("Arial", 25))
         label.pack()
         self.update_widget(label, var, data_key, data_name)
 
@@ -47,5 +50,5 @@ class UserInterface:
         self.data_connector.stop()
 
     def update_widget(self, label, var, data_key, data_name):
-        var.set(data_name + ": " + str(self.live_data[data_key]))
+        var.set(str(self.live_data[data_key]))
         label.after(100, self.update_widget, label, var, data_key, data_name)
