@@ -10,9 +10,10 @@ class DataConnector:
     use_mock = False
     running = True
 
-    def __init__(self, live_data, data_points):
+    def __init__(self, live_data, data_points, mock_data):
         self.live_data = live_data
         self.data_points = data_points
+        self.use_mock = mock_data
 
     def process_response(self, response):
         if not response.is_null():
