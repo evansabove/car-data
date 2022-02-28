@@ -8,7 +8,7 @@ import obd
 
 live_data = {}
 config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
-data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL]
+data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL, obd.commands.ENGINE_LOAD]
 use_mock = True
 
 def process_response(response):
