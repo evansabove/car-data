@@ -4,17 +4,15 @@ import time
 import uuid
 import datetime
 import csv_writer
-import obd
 
 class DataConnector:
     config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
-    data_points = [obd.commands.SPEED, obd.commands.RPM, obd.commands.COOLANT_TEMP, obd.commands.INTAKE_TEMP, obd.commands.FUEL_LEVEL, obd.commands.ENGINE_LOAD]
-    use_mock = True
+    use_mock = False
     running = True
 
-    def __init__(self, live_data):
+    def __init__(self, live_data, data_points):
         self.live_data = live_data
-
+        self.data_points = data_points
 
     def process_response(self, response):
         if not response.is_null():
@@ -35,9 +33,6 @@ class DataConnector:
             return
 
         drive_id = uuid.uuid4()
-
-        for command in self.data_points:
-            self.live_data[command.name] = None
 
         self.live_data['TIMESTAMP'] = None
 
