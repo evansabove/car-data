@@ -7,6 +7,7 @@ class UserInterface:
         self.live_data = live_data
 
         self.window = tk.Tk()
+        self.window.attributes('-fullscreen', True)
         self.window.protocol("WM_DELETE_WINDOW", self.close)
 
         self.setup_ui()
@@ -25,10 +26,10 @@ class UserInterface:
         col_count, row_count = self.window.grid_size()
 
         for col in range(col_count):
-            self.window.grid_columnconfigure(col, minsize=200)
+            self.window.grid_columnconfigure(col, minsize=200, weight=1)
 
         for row in range(row_count):
-            self.window.grid_rowconfigure(row, minsize=200)
+            self.window.grid_rowconfigure(row, minsize=200, weight=1)
 
         self.window.configure(background='#002B36')
 
