@@ -10,11 +10,13 @@ live_data = { i.name : None for i in data_points }
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--mock", default=False)
+    parser.add_argument("--log", default=True)
     args = parser.parse_args()
 
     use_mock = args.mock is not None and args.mock == 'True'
+    log_data = args.log is None or args.log == 'True'
 
-    data_connector = DataConnector(live_data, data_points, use_mock)
+    data_connector = DataConnector(live_data, data_points, use_mock, log_data)
     data_thread = Thread(target=data_connector.start)
     data_thread.start()
 
@@ -25,3 +27,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         data_connector.stop()
         app.close()
+
+# implement an 'update-or-run' script - tries to get the latest version of the script (from a CDN?) - if it can't, then just run latest anyway.

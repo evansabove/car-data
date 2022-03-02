@@ -9,11 +9,13 @@ class DataConnector:
     config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
     use_mock = False
     running = True
+    log_data = False
 
-    def __init__(self, live_data, data_points, mock_data):
+    def __init__(self, live_data, data_points, mock_data, log_data):
         self.live_data = live_data
         self.data_points = data_points
         self.use_mock = mock_data
+        self.log_data = log_data
 
     def process_response(self, response):
         if not response.is_null():
@@ -37,7 +39,9 @@ class DataConnector:
 
         self.live_data['TIMESTAMP'] = None
 
-        csv_writer.initialize_csv(drive_id, self.live_data.keys())
+        if self.log_data:
+            csv_writer.initialize_csv(drive_id, self.live_data.keys())
+
         self.configure_watches()
 
         self.connection.start()
@@ -46,7 +50,8 @@ class DataConnector:
             with self.connection.paused() as was_running:
                 self.live_data["TIMESTAMP"] = str(datetime.datetime.now())
 
-                csv_writer.write_to_csv(drive_id, self.live_data)
+                if self.log_data:
+                    csv_writer.write_to_csv(drive_id, self.live_data)
                 
                 time.sleep(1)
 
