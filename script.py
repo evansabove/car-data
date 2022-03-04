@@ -1,5 +1,6 @@
 from threading import Thread
 from user_interface import UserInterface
+from tabbed_user_interface import TabbedUserInterface
 from data_connector import DataConnector
 import obd
 from argparse import ArgumentParser
@@ -20,7 +21,7 @@ if __name__ == "__main__":
     data_thread = Thread(target=data_connector.start)
     data_thread.start()
 
-    app = UserInterface(data_connector, live_data)
+    app = TabbedUserInterface(data_connector, live_data)
 
     try:
         app.start_ui()
