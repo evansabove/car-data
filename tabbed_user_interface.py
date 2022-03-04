@@ -17,8 +17,8 @@ class TabbedUserInterface:
         self.live_data = live_data
 
         self.window = tk.Tk()
-        self.window.geometry("480x320")
-        #self.window.attributes('-fullscreen', True)
+        #self.window.geometry("480x320")
+        self.window.attributes('-fullscreen', True)
         self.window.protocol("WM_DELETE_WINDOW", self.close)
 
         self.setup_ui()
