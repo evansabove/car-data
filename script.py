@@ -12,12 +12,14 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--mock", default=False)
     parser.add_argument("--log", default=True)
+    parser.add_argument("--port", default=True)
     args = parser.parse_args()
 
     use_mock = args.mock is not None and args.mock == 'True'
     log_data = args.log is None or args.log == 'True'
+    port = args.port if args.port is not None else "\\.\\COM3"
 
-    data_connector = DataConnector(live_data, data_points, use_mock, log_data)
+    data_connector = DataConnector(live_data, data_points, use_mock, log_data, port)
     data_thread = Thread(target=data_connector.start)
     data_thread.start()
 
