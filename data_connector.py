@@ -6,16 +6,17 @@ import datetime
 import csv_writer
 
 class DataConnector:
-    config = { 'connection_attempt_limit': 10, 'communication_port': '\\.\\COM3' }
+    config = { 'connection_attempt_limit': 10 }
     use_mock = False
     running = True
     log_data = False
 
-    def __init__(self, live_data, data_points, mock_data, log_data):
+    def __init__(self, live_data, data_points, mock_data, log_data, port):
         self.live_data = live_data
         self.data_points = data_points
         self.use_mock = mock_data
         self.log_data = log_data
+        self.config['communication_port'] = port
 
     def process_response(self, response):
         if not response.is_null():
