@@ -37,6 +37,8 @@ class TabbedUserInterface:
         self.add_frame(obd.commands.INTAKE_TEMP.name, 'Intake Temp', '°C')
         self.add_frame(obd.commands.FUEL_LEVEL.name, 'Fuel Level', '%')
         self.add_frame(obd.commands.ENGINE_LOAD.name, 'Engine Load', '%')
+        self.add_frame(obd.commands.THROTTLE_POS.name, 'Throttle Position', '%')
+        self.add_frame(obd.commands.RELATIVE_ACCEL_POS.name, 'Relative Throttle Position', '%')
 
         self.frames[0].lift()
 
