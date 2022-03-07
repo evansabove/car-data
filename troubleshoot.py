@@ -14,7 +14,7 @@ def try_connect():
         print("Connection made with blank")
     else:
         print("Trying to connect to /dev/rfcomm0")
-        conn = obd.Async('/dev/rfcomm0', fast=False, timeout=30)
+        conn = obd.Async('/dev/rfcomm0', fast=False, timeout=10)
 
         if conn.is_connected():
             print("Connection made with rfcomm0")
