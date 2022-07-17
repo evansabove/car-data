@@ -5,8 +5,6 @@ from subprocess import call
 def connect(config):
     connection_attempt = 1
 
-    call(['sudo rfcomm connect hci0 00:1D:A5:68:98:8B 0'])
-
     while True:
         if connection_attempt > config['connection_attempt_limit']:
             return None
