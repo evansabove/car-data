@@ -66,7 +66,7 @@ where `[XX:XX:XX:XX:XX:XX]` is the MAC address of the OBD adapter.
   [Desktop Entry]
   Type=Application
   Name=CarData
-  Exec=/usr/bin/python /home/pi/Projects/car-data/script.py --log=False --port=/dev/rfcomm0
+  Exec=/usr/bin/python3 /home/pi/Projects/car-data/script.py --log=False --port=/dev/rfcomm0
   ```
 
 
@@ -76,4 +76,4 @@ where `[XX:XX:XX:XX:XX:XX]` is the MAC address of the OBD adapter.
 
 
 
-sudo rfcomm connect hci0 00:1D:A5:68:98:8B 0
+sudo rfcomm connect hci0 00:1D:A5:68:98:8B 0h
