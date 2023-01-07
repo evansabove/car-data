@@ -19,7 +19,7 @@ if __name__ == "__main__":
     use_mock = args.mock is not None and args.mock == 'True'
     log_data = args.log is None or args.log == 'True'
 
-    pexpect.run('sudo rfcomm bind hci0 00:1D:A5:68:98:8B 0')
+    #pexpect.run('sudo rfcomm bind hci0 00:1D:A5:68:98:8B 0')
     #pexpect.run('sudo rfcomm connect hci0 00:1D:A5:68:98:8B 0')
 
     data_connector = DataConnector(live_data, data_points, use_mock, log_data, args.port)
