@@ -20,7 +20,7 @@ if __name__ == "__main__":
     log_data = args.log is None or args.log == 'True'
 
     print("Attempting to bind hci0 device to 00:1D:A5:68:98:8B on channel 0")
-    pexpect.run('sudo rfcomm bind hci0 00:1D:A5:68:98:8B 0')
+    pexpect.run('sudo rfcomm bind hci0 00:1D:A5:68:98:8B')
     print("Bound (either successfully or unsuccessfully")
 
     data_connector = DataConnector(live_data, data_points, use_mock, log_data, args.port)
