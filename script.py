@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     data_connector = DataConnector(live_data, data_points, use_mock, log_data, args.port)
     data_thread = Thread(target=data_connector.start)
-    data_thread.start()
+    #data_thread.start()
 
     app = TabbedUserInterface(data_connector, live_data)
     #app = UserInterface(data_connector, live_data)
