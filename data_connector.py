@@ -6,7 +6,7 @@ import datetime
 import csv_writer
 
 class DataConnector:
-    config = { 'connection_attempt_limit': 10 }
+    config = { 'connection_attempt_limit': 30 }
     use_mock = False
     running = True
     log_data = False
@@ -33,7 +33,7 @@ class DataConnector:
         self.connection = self.get_connector()(self.config)
 
         if self.connection is None:
-            print("Connection could not be made. Not trying any more.")
+            print("Connection could not be made. Not trying any more!")
             return
 
         drive_id = uuid.uuid4()
@@ -54,7 +54,7 @@ class DataConnector:
                 if self.log_data:
                     csv_writer.write_to_csv(drive_id, self.live_data)
                 
-                time.sleep(1)
+                time.sleep(2)
 
                 if was_running:
                     self.connection.start()

@@ -2,6 +2,10 @@ import tkinter as tk
 import obd
 
 class UserInterface:
+    background_colour = '#FFFFFF'
+    label_color = '#000000'
+    value_color = '#000000'
+
     def __init__(self, data_connector, live_data):
         self.data_connector = data_connector
         self.live_data = live_data
@@ -31,16 +35,16 @@ class UserInterface:
         for row in range(row_count):
             self.window.grid_rowconfigure(row, minsize=150, weight=1)
 
-        self.window.configure(background='#002B36')
+        self.window.configure(background=self.background_colour)
 
     def add_widget(self, data_key, data_name, data_unit, row, col):
-        frame = tk.Frame(bg='#002B36')
+        frame = tk.Frame(bg=self.background_colour)
 
-        title_label = tk.Label(frame, text=data_name, bg='#002B36', fg='#FFF', font=("Arial", 20))
+        title_label = tk.Label(frame, text=data_name, bg=self.background_colour, fg=self.label_color, font=("Arial", 20))
         title_label.pack()
 
         var = tk.StringVar()
-        value_label = tk.Label(frame, textvariable=var, bg='#002B36', fg='#746A31', font=("Arial", 25))
+        value_label = tk.Label(frame, textvariable=var, bg=self.background_colour, fg=self.value_color, font=("Arial", 25))
         value_label.pack()
         self.update_widget(value_label, var, data_key, data_name, data_unit)
 

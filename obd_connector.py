@@ -1,8 +1,18 @@
 import obd
 import time 
 from subprocess import call
+import pexpect
+import platform
+
+def bind_rfcomm_port():
+    if platform.system() == 'Linux':
+        print("Attempting to bind hci0 device to 00:1D:A5:68:98:8B")
+        pexpect.run('sudo rfcomm bind hci0 00:1D:A5:68:98:8B')
+        print("Bind complete")
 
 def connect(config):
+    bind_rfcomm_port()
+
     connection_attempt = 1
 
     while True:

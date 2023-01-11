@@ -9,6 +9,10 @@ class Page(tk.Frame):
         self.lift()
 
 class TabbedUserInterface:
+    background_colour = '#FFFFFF'
+    label_color = '#000000'
+    value_color = '#000000'
+
     frames = []
     current_frame = 0
 
@@ -27,30 +31,30 @@ class TabbedUserInterface:
         self.window.mainloop()
 
     def setup_ui(self):
-        self.window.configure(background='#002B36')
-        self.frame_container = tk.Frame(bg='#002B36')
+        self.window.configure(background=self.background_colour)
+        self.frame_container = tk.Frame(bg=self.background_colour)
         self.frame_container.pack(side=tk.TOP, fill=tk.BOTH, expand=YES)
 
         self.add_frame(obd.commands.SPEED.name, 'Speed', 'km/h')
         self.add_frame(obd.commands.RPM.name, 'RPM', None)
-        self.add_frame(obd.commands.COOLANT_TEMP.name, 'Coolant Temp', '°C')
-        self.add_frame(obd.commands.INTAKE_TEMP.name, 'Intake Temp', '°C')
-        self.add_frame(obd.commands.FUEL_LEVEL.name, 'Fuel Level', '%')
-        self.add_frame(obd.commands.ENGINE_LOAD.name, 'Engine Load', '%')
-        self.add_frame(obd.commands.THROTTLE_POS.name, 'Throttle Position', '%')
-        self.add_frame(obd.commands.RELATIVE_ACCEL_POS.name, 'Relative Throttle Position', '%')
+        self.add_frame(obd.commands.COOLANT_TEMP.name, 'Coolant', '°C')
+        self.add_frame(obd.commands.INTAKE_TEMP.name, 'Intake', '°C')
+        self.add_frame(obd.commands.FUEL_LEVEL.name, 'Fuel', '%')
+        self.add_frame(obd.commands.ENGINE_LOAD.name, 'Load', '%')
 
         self.frames[0].lift()
 
     def add_frame(self, data_key, data_name, data_unit):
-        frame = tk.Frame(self.frame_container, bg='#002B36')
+        frame = tk.Frame(self.frame_container, bg=self.background_colour)
 
-        title_label = tk.Label(frame, text=data_name, bg='#002B36', fg='#FFF', font=("Arial", 20))
-        title_label.place(relx=0.5, rely=0.42, anchor=tk.CENTER)
+        title_label = tk.Label(frame, text=data_name, bg=self.background_colour, fg=self.label_color, font=("Arial", 30))
+        title_label.place(relx=0.5, rely=0.22, anchor=tk.CENTER)
+        title_label.bind("<Button-1>", self.increment_frame)
 
         var = tk.StringVar()
-        value_label = tk.Label(frame, textvariable=var, bg='#002B36', fg='#746A31', font=("Arial", 25))
+        value_label = tk.Label(frame, textvariable=var, bg=self.background_colour, fg=self.value_color, font=("Arial", 60))
         value_label.place(relx=0.5, rely=0.58, anchor=tk.CENTER)
+        value_label.bind("<Button-1>", self.increment_frame)
         self.update_widget(value_label, var, data_key, data_name, data_unit)
 
         frame.place(relheight=1, relwidth=1)
