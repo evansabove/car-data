@@ -9,9 +9,9 @@ class Page(tk.Frame):
         self.lift()
 
 class TabbedUserInterface:
-    background_colour = '#FFFFFF'
-    label_color = '#000000'
-    value_color = '#000000'
+    background_colour = '#D7D9CE'
+    label_color = '#040404'
+    value_color = '#040404'
 
     frames = []
     current_frame = 0
@@ -62,7 +62,10 @@ class TabbedUserInterface:
         self.frames.append(frame)
 
     def update_widget(self, label, var, data_key, data_name, data_unit):
-        widget_text = f'{str(self.live_data[data_key])} {data_unit if data_unit is not None else ""}'
+        value = str(self.live_data[data_key]) if self.live_data[data_key] is not None else '--'
+        unit = data_unit if data_unit is not None and self.live_data[data_key] is not None else ''
+
+        widget_text = f'{value} {unit}'
 
         var.set(widget_text)
 
